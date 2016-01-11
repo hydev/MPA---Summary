@@ -13,7 +13,7 @@
 
 % \usepackage[]{auto-pst-pdf}
 % \usepackage{pstricks}
-% \usepackage{pst-plot}
+ \usepackage{pst-plot}
 % \usepackage{pst-node}
 % \usepackage{multido}
 % \usepackage{url}
@@ -63,7 +63,7 @@ Friedrich-Alexander Universit\"at Erlangen-N\"urnberg
 \end{minipage}%
 \begin{minipage}[t]{.45\textwidth}
 \center
-Iñigo Fernandez\\%				Iñigo Fernandez\\
+Iñigo Fern\' andez\\%				Iñigo Fernandez\\
 \small
 Friedrich-Alexander Universit\"at Erlangen-N\"urnberg
 \protect\\{} % 
@@ -76,8 +76,8 @@ Friedrich-Alexander Universit\"at Erlangen-N\"urnberg
 \thispagestyle{empty}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Introduction}
-\label{section:introduction}
+\section{Default Introduction [will be removed]}
+\label{section:defaultIntroduction}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 This is a \LaTeX-template for the summary of the reading assignment summary. Note that the summary
@@ -88,7 +88,7 @@ The style of this template may not be changed.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Main Section}
+\section{Main Section[will be removed]}
 \label{section:main}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -110,6 +110,52 @@ Example for figure: Figure~\ref{figure:example}.
 
 \newpage
 
+
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{General Principles} 
+\label{section:generalPrinciples}
+%Alternative names: intro, basics...
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Musical Structure}  
+% Mixture of sections 'intro' and 4.1.2 from the book
+The sounds that conform music are not organized in a random way: they are combined conforming musical structures such as phrases, motifs or sections. Those structures are again combined and form higher-level sections that determine the overall layout of the composition, also called \textbf{musical structure}. The names of the mentioned high-level sections may vary depending on the kind of music we are analysing, as well as the way they are arranged. 
+
+\medskip
+
+In Western music, the musical structure often follows certain patterns. The simplest one is the \textbf{strophic form}, which consists of a sequence of a repeated part resulting in a $A_{1}A_{2}A_{3}A_{4}...$ structure, usually used in folk song or nursery rhymes. Medleys or potpourris (concatenation of popular songs) use the so called \textbf{chain form}, a sequence of unrelated parts ($ABCD...$), sometimes with repeats ($A_{1}A_{2}B_{1}B_{2}C_{1}C_{2}...$). Another form is the \textbf{rondo form}, where a recurring theme alternates with contrasting sections $A_{1}BA_{2}CA_{3}DA_{4}...$
+
+\medskip
+
+In Western classical music, one of the most important musical structures is the \textbf{sonata form}. It consists of an \textbf{exposition} ($E$), a \textbf{development} ($D$), and a \textbf{recapitulation} ($R$), where the exposition is repeated once. At a coarse level, that recapitulation can be regarded as a repetition of the exposition, although at a finer level they are different. Sometimes, one can find an additional \textbf{introduction} ($I$) and a closing \textbf{coda} ($C$), thus yielding the form $ IE_{1} E_{2} DRC $. 
+
+\medskip
+
+In popular music, the most typical parts are the \textbf{verse} ($V$ ) and the \textbf{chorus} ($C$)
+sections. Each verse usually employs the same melody (possibly with slight modifications), while the lyrics change for each verse. The \textbf{chorus} or \textbf{refrain} typically consists of a melodic and lyrical phrase which is repeated.
+Sometimes, pop songs may start with an \textbf{intro} ($I$) and close with an \textbf{outro} ($O$). Finally, verse and chorus sections may be connected by an additional part called a \textbf{bridge} ($B$). The verse and chorus are usually repeated throughout a song, while the intro and the outro appear only once. Some pop songs may also have a \textbf{solo} where an instrument plays a melody. 
+
+
+\subsection{Structure Analysis and Segmentation}
+%from book 4.1.1
+
+goal
+basics
+different segmentation principles 
+
+
+\section{Mathematical tools: Self Similarity Matrix}
+\label{section:ssm}
+
+\section{Repetition based Segmentation and Audio Thumbnailing}
+\label{section:repetition}
+
+
+\section{Novelty based Segmentation}
+\label{section:novelty}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Feedback}
 \label{section:feedback}
@@ -117,15 +163,15 @@ Example for figure: Figure~\ref{figure:example}.
 
 
 %-----------------------
-% \begin{figure}[t]
-% \begin{center}
-% \includegraphics[width=5cm]{figure_example.png}
-% \end{center}
-% \caption{
-% Example for a figure.
-% }
-% \label{figure:example}
-% \end{figure}
+ \begin{figure}[t]
+ \begin{center}
+ \includegraphics[width=5cm]{figure_example.png}
+ \end{center}
+ \caption{
+ Example for a figure.
+ }
+ \label{figure:example}
+ \end{figure}
 %-----------------------
 
 
