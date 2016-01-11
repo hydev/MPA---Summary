@@ -134,27 +134,70 @@ In Western classical music, one of the most important musical structures is the 
 \medskip
 
 In popular music, the most typical parts are the \textbf{verse} ($V$ ) and the \textbf{chorus} ($C$)
-sections. Each verse usually employs the same melody (possibly with slight modifications), while the lyrics change for each verse. The \textbf{chorus} or \textbf{refrain} typically consists of a melodic and lyrical phrase which is repeated.
-Sometimes, pop songs may start with an \textbf{intro} ($I$) and close with an \textbf{outro} ($O$). Finally, verse and chorus sections may be connected by an additional part called a \textbf{bridge} ($B$). The verse and chorus are usually repeated throughout a song, while the intro and the outro appear only once. Some pop songs may also have a \textbf{solo} where an instrument plays a melody. 
+sections. Each verse usually employs the same melody (possibly with slight modifications), while the lyrics change for each verse. The \textbf{chorus} or \textbf{refrain} typically consists of a melodic and lyrical phrase which is repeated. Sometimes, pop songs may start with an \textbf{intro} ($I$) and close with an \textbf{outro} ($O$). Finally, verse and chorus sections may be connected by an additional part called a \textbf{bridge} ($B$). The verse and chorus are usually repeated throughout a song, while the intro and the outro appear only once. Some pop songs may also have a \textbf{solo} where an instrument plays a melody. 
 
 
-\subsection{Structure Analysis and Segmentation}
+\subsection{Segmentation and Structure Analysis}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %from book 4.1.1
 
-goal
-basics
-different segmentation principles 
+The main goal of \textbf{structure analysis} is to find and understand the relationships between the sections of the musical structure. \textbf{Repetitions} play an important role in music, where rhythms, harmonies or melodies are often repeated. On the other hand, \textbf{contrast} is the difference between successive sections of different character regarding tempo, loudness or instrumentation. A further principle is that of \textbf{variation}, where motifs and parts are picked up again in a transformed form. Finally, a section is often characterized by some sort of \textbf{homogeneity}, being the all its features according to some criteria. All of those principles have to be considered with time in mind: music happens in \textbf{time} (opposed to paintings for example) and the order of events is essential in the analysis. 
 
 
+%For example, some of them may be repeated with slight changes, as in the case of a pop song, that normally has several similar \textit{verses}. Those verse sections may vary in instrumentation, tempo, lyrics, melody and many other aspects. If they do, that section is called a \textbf{variation}. The task of the analysis is to identify them as similar and to correctly group them in the same musical category \textit{verse}. % 
+%%\textbf{Repetitions} are one of the phenomena that happen in a piece of music. Variations are similar
+%
+% as well as to analyse the progression of the different musical categories. Repetitions are one of the phenomena studied by musical structure analysis, 
+
+The first step for analysing the relation of the segments is to identify them. In a more general context, \textbf{segmentation} refers to partitioning a document into multiple parts that are easier to analyse than the original document. In music, segmentation decomposes an audio stream into acoustically meaningful sections. At a fine level, it may aim to find the boundaries between individual notes or beat positions. At a coarser level, the goal may be to de detect changes in instrumentation or harmony to find the boundaries between \textit{verse} and \textit{chorus} sections. Also, discriminating between silence, speech, and music, finding the actual beginning of a music recording or separating the applause at the end of a performance are typical segmentation tasks.
+
+The first step in segmentation of music is to transform the given audio into a suitable feature representation. As discussed in previous chapters, there is various alternatives to choose depending on the focus of the study. 
+
+When focusing in harmony and melody, \textbf{chroma features} are one of the most typical features. The drawback of using them is that we lose some information about pitches that could be useful for humans to distinguish the timbre, and so the instrumentation. However, in structure analysis is unnecessary to be so precise. Instead, mid-level representations correlated to instrumentation and timbre are enough. The \textbf{mel-frequency cepstral coefficients} (MFCCs) are often used, though they were originally developed for speech recognition.
+
+Tempo and beat information can also be used in homogeneity-based approaches. Instead of extracting such information explicitly, a mid-level feature representation correlated to tempo and rhythm, a \textbf{tempogram} suffices.
+
+Of course, one may use various of the methods mentioned before to do different analysis and get to a better understanding of the musical structure.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Mathematical tools: Self Similarity Matrix}
 \label{section:ssm}
+%from book 4.2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Basic Definitions and Principles}
+\label{subsection:ssmBasic}
 
+To study musical structures and their mutual relations, we convert the music signal into a feature sequence and then compare each element of the sequence with all other elements. This results in a \textbf{self-similarity matrix} (SSM), whose elements $s(x,y)$ are high in case the elements $x,y$ are similar and small otherwise. 
+
+\subsection{Enhancement Strategies}
+\label{subsection:ssmEnhancement}
+
+
+
+\subsubsection{Feature Preprocessing}
+\label{subsubsection:ssmEnhancementFeaturePreprocessing}
+
+\subsubsection{Path smoothing}
+\label{subsubsection:ssmEnhancementPathSmoothing}
+
+
+\subsubsection{Transposition Invariance}
+\label{subsubsection:ssmEnhancementTransInvariance}
+
+
+\subsubsection{Thresholding}
+\label{subsubsection:ssmEnhancementThresholding}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Repetition based Segmentation and Audio Thumbnailing}
 \label{section:repetition}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Novelty based Segmentation}
 \label{section:novelty}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Feedback}
