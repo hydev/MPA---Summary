@@ -108,8 +108,6 @@ Example for a citation: \cite{Mueller07_InformationRetrieval_SPRINGER}.
 
 Example for figure: Figure~\ref{figure:example}.
 
-\newpage
-
 
 \newpage
 
@@ -168,23 +166,110 @@ Of course, one may use various of the methods mentioned before to do different a
 \subsection{Basic Definitions and Principles}
 \label{subsection:ssmBasic}
 
-To study musical structures and their mutual relations, we convert the music signal into a feature sequence and then compare each element of the sequence with all other elements. This results in a \textbf{self-similarity matrix} (SSM), whose elements $s(x,y)$ are high in case the elements $x,y$ are similar and small otherwise. 
+To study musical structures and their mutual relations, we convert the music signal into a feature sequence and then compare each element of the sequence with all other elements. This results in a \textbf{self-similarity matrix} (SSM), whose elements $s(x,y)$ are high in case the elements $x,y$ are similar and small otherwise. The comparison of the $N$ features with each other results in a $N$-square \textbf{self-similarity matrix S} defined by $\textbf{S}(n,m):=s(x_{n}, x_{m})$. The tuple ($n,m$) is called a \textbf{cell} of \textbf{S}, and the value \textbf{S}($n,m$) is the \textbf{score} of the cell ($n,m$).
+
+Obviously the concept of self-similarity matrices is closely related to the concept of cost matrices. However, instead of a cost measure $c$ we now use a similarity measure $s$. And
+instead of comparing two sequences $X$ and $Y$ with each other, we now compare a single sequence $X$ with itself.
+
+A common \textbf{similarity measure} $s$ is the absolute value of the inner product, $s(x,y):=|\langle x,y \rangle|$, but of course there are many more possibilities. Their suitability depends on the properties of the considered features and vice versa. It is also common to normalize the similarity measure so it has a value between $[0,1]$. 
+
+In this case, the SSM has a diagonal with large values, because $s(x_{n},x_{n})=1$ for all $n$. Recurring patterns become visible in the SSM in the form of structures. The most commons ones are \textbf{block}-like structures (corresponding to musical properties that remain constant through time, and so related to homogeneity), and \textbf{paths} parallel to the main diagonal that appear when  sequences are repeated. Those paths may not be perfectly parallel to the main diagonal, due to relative tempo differences between the two related segments.
+
+(image of SSMs)
+
+(examples of sssm interpretations) page 183 of the book
+
+To formalize paths and block structures, some other basics have to be defined first. Figure~\ref{fig:ssmPathBlock} shows a graphical description of them. A segment is a set $\alpha=[s:t]$ of features specified by the index $s$ of the starting feature and the index $t$ of its last feature. We will use $|\alpha|:=t-s+1$ to denote the length of $\alpha$. A \textbf{path} over $\alpha$ of length $L$ is a sequence $P=((n_{1},m_{1}), (n_{2},m_{2}), ..., (n_{L},m_{L})$ of cells $(n_{l}, m_{l})$ that satisfy the boundary condition $m_{1}=s$ and $m_{L}=t$ and the step size condition $(n_{L+1},m_{L+1})-(n_{L},m_{L})\in \Sigma$, where $\Sigma$ denotes the admissible set size. As in the warping path case, we normally use $\Sigma=\{(2,1), (1,2), (1,1)\}$.
+
+Every path $P$ has two two segments $\pi_{1}:=[n_{l}:n_{L}$ and $\pi_{1}:=[m_{l}:m_{L}]$ associated, defined by its projections. Logically, $\pi_{2}(P)= \alpha$. The other segment $\pi _{1} (P)= \alpha$ is called the \textbf{induced segment}. The \textbf{score} $\sigma (P)$ of $P$ is defined as\[\sigma(P):= 	\sum_{l=1}^{L}\textbf{S}(n_{l}, m_{l})\]
+
+Note that each path over the segment \alpha  encodes a relation between \alpha and an induced segment, where the score $\sigma(P)$ yields a quality measure for this relation.
+
+%-----------------------
+\begin{figure}[h]
+  \includegraphics[width=\linewidth]{images/SSMpathBlocks.png}
+  \label{fig:ssmPathBlock}
+	\begin{center}
+		\caption{SSM with path and block structures.}
+	\end{center}
+\end{figure}
+%-----------------------
+
+A \textbf{block} over a segment  $\alpha=[s:t]$ is a subset $B=\alpha' \times \alpha$ for some segment $\alpha'=[s':t']$. As for paths, we define the two projections $\pi_{1}(B)= \alpha'$ and $\pi_{2}(B)= \alpha$, and call $\alpha'$ the \textbf{induced segment}. The score of the block is given by \[\sum_{(n,m)\in B}^{L}\textbf{S}(n, m)\].
+In case the  measure $s$ is symmetric, the self-similarity matrix and the similarity relations between segments are symmetric as well. Normally, if a segment $\alpha_{1}$ is similar to $\alpha_{2}$ and $\alpha_{2}$ is similar to $\alpha_{3}$, $\alpha_{3}$ should be similar to $\alpha_{1}$. This is called \textbf{transitivity}, and happens if the similarity measure also has that property. Consequently, paths and blocks often appeare in groups that fulfill certain symmetry and transitivity properties. For example, if there is a block $B=\alpha'\times\alpha$, then there is also a block $\alpha\times\alpha'$. This leads to additional blocks $\alpha'\times\alpha'$ and $\alpha\times\alpha$. 
+
+Most computational approaches to music structure follow these steps:
+
+\begin{enumerate}
+\item Music is transformed into a feature sequence.\item A self-similarity matrix is computed based on a similarity measure.\item Blocks and paths are detected.\item Similar segments are grouped applying a clustering step.
+\end{enumerate}
+
 
 \subsection{Enhancement Strategies}
 \label{subsection:ssmEnhancement}
 
-
+Computerized music structure analysis is an error-prone and fragile task, as both the grouping and the block and path extraction step are deteriorated because of the musical variations. However, there are some strategies for enhancing the properties of SSMs to make the process more reliable. 
 
 \subsubsection{Feature Preprocessing}
 \label{subsubsection:ssmEnhancementFeaturePreprocessing}
+
+Considering a modified chroma representation may result in a SSM with more recognizable patterns. This task is better explained in another chapter, but in broad terms it is based on two parameters: The length parameter $l$, to average the feature values over $l$ consecutive frames, and the downsampling parameter $d$ which reduces the feature rate. The effects can be seen in the Figure~\ref{fig:ssmDownsampling}:
+
+
+%-----------------------
+\begin{figure}[h!]
+  \includegraphics[width=\linewidth]{images/ssmDownsampling.png}
+  \label{fig:ssmDownsampling}
+	\begin{center}
+		\caption{(a) Usage of original normalized chroma features (10 Hz). (b) Applying $l$=40 and $d$=10 (1 Hz). (c) Applying $l$= 160 and $d$=20 (0.5 Hz). (d) Applying $l$=480 and $d$=50 (0.2 Hz).}
+	\end{center}
+\end{figure}
+%-----------------------
+
+
+Many of the details have been smoothed out, and some
+of the structurally relevant path and block structures have become more prominent. Moreover,reducing the feature rate improves the computational efficiency for subsequent processing steps. Further increasing the smoothing length and reducing the feature rate results in an enhancement of block-like structures. However, using large smoothing windows relevant path structures may be lost. A good strategy for adjusting and reducing the feature rate is based on \textbf{adaptive windowing}, where the analysis windows are determined by previously extracted onset
+and beat positions. 
+
 
 \subsubsection{Path smoothing}
 \label{subsubsection:ssmEnhancementPathSmoothing}
 
 
+Paths that run parallel to the main diagonal are important structural elements of similarity matrices, but the automated detection of them constitutes a difficult problem due to distortions. 
+
+To some extent, structural properties of the SSM may be augmented by using longer analysis windows in the feature computation step. This, however, may also smooth out important details. An alternative is to apply image processing techniques. Relevant paths run along the direction of the main diagonal. To augment such paths, one can apply an averaging filter (or low-pass filter) in the direction of the main diagonal, which results in an emphasis of diagonal structures and a softening of others, nondiagonal ones.
+
+We can obtain a smoothed similarity matrix $\textbf{S}_{L}$ from a $N \times N$  SSM applying the following formula: 
+\[\textbf{S}_{L}(n,m):= \frac{1}{L}\sum_{l=0}^{L-1}\textbf{S}(n+l,m+l)\]
+In other words, the value $\textbf{S}_{L}(n,m)$ is obtained by averaging the values of the diagonal of length $L$ starting at position $(n,m)$. Where the matrix $\textbf{S}$ is not defined, we extend it by zero-padding. 
+
+A simple filtering along the main diagonal only works well if there are no relative tempo differences between the segments. However, this is violated when a part is repeated with a faster or slower tempo. This results in a path that does not run exactly parallel to the main diagonal (in particular at the beginning), so that applying an averaging filter in the direction of the main diagonal destroys some of the path. To deal with such relative tempo differences, one idea is to apply a \textbf{multiple filtering} approach, where the SSM is smoothed along various directions similar to the direction of the main diagonal. Each such direction corresponds to a tempo difference and results in a separate filtered matrix. The final self-similarity matrix is obtained by taking the cell-wise maximum over all these matrices.  
+
+%-----------------------
+\begin{figure}[h]
+  \includegraphics[width=\linewidth]{images/ssmPathSmoothing.png}
+  \label{fig:ssmPathSmoothing}
+	\begin{center}
+		\caption{(a) Original SSM using chroma features (resolution of 2 Hz). (b) SSM after applying diagonal smoothing. (c) SSM after applying tempo-invariant smoothing. (d) SSM after applying forward–backward smoothing.}
+	\end{center}
+\end{figure}
+%-----------------------
+
+This is easier to see with an example. Assume we have  two repeating segments $\alpha_{1}$ and $\alpha_{2}$ played at the same tempo. The direction of the resulting path is (1, 1). Next, assume the second segment $\alpha_{2}$ is played at half the tempo. Then the direction of the path is (1, 2). If the tempo difference between two segments is given by a real number  \theta (the second segment played \theta times slower than the first one), the resulting gradient is $(1,\theta)$. We define the self- similarity matrix smoothed in the direction of (1, \theta) by
+\[\textbf{S}_{L,\theta}(n,m):=\frac{1}{L}\sum_{l=0}^{L-1}\textbf{S}(n+l,m+[l·\theta])\]
+where $[l·\theta]$ denotes the integer closest to $l·\theta$. Again, we must apply zero-padding to the matrix $\textbf{S}$ so that $\textbf{S}_{L,\theta}$ is defined for every $n,m$.
+
+In practice, one does not know the tempo difference that may occur.  Also, the relative tempo difference may change over time. The idea is to consider a (finite) set \Theta  consisting of various tempo parameters \theta. We compute a matrix $\textbf{S}_{L,\theta}$ for each \theta, and obtain a final matrix $\textbf{S}_{L,\Theta}$ by a cell-wise maximization over all \theta: 
+\[\textbf{S}_{L,\theta}(n,m):=\max_{\theta\in\Theta}\textbf{S}_{L,\theta}(n,m)\]
+
+In practice, one can use prior information about tempo differences to determine the set \Theta. It rarely happens that the relative tempo difference is larger than 50 percent, so \Theta can be chosen from −50 to +50 percent. Further-
+more, the tempo range can be covered well by considering only a small number of tempo parameters. A typical choice could be  $\Theta=\{0.66, 0.81, 1.00, 1.22, 1.50\}$.
+This smoothing works in the forward direction. Better results can be achieved if additionally applying the filter in a backward direction. The final self-similarity matrix is obtained taking the cell-wise maximum over the forward- and backward-smoothed matrices. 
+
+
 \subsubsection{Transposition Invariance}
 \label{subsubsection:ssmEnhancementTransInvariance}
-
 
 \subsubsection{Thresholding}
 \label{subsubsection:ssmEnhancementThresholding}
@@ -206,9 +291,9 @@ To study musical structures and their mutual relations, we convert the music sig
 
 
 %-----------------------
- \begin{figure}[t]
+ \begin{figure}[h]
  \begin{center}
- \includegraphics[width=5cm]{figure_example.png}
+ \includegraphics[width=5cm]{images/figure_example.png}
  \end{center}
  \caption{
  Example for a figure.
