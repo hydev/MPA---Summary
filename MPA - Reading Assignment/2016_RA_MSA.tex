@@ -36,6 +36,10 @@
 %\def\SMPC{{\mathcal S^{\mathrm{pc}}}}
 \def\SMPC{{\mathcal S^{\mathrm{pb}}}}
 
+%added to be able to use argmax, argmin
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
 \pagestyle{empty}
 
 \begin{document}
@@ -271,12 +275,95 @@ This smoothing works in the forward direction. Better results can be achieved if
 \subsubsection{Transposition Invariance}
 \label{subsubsection:ssmEnhancementTransInvariance}
 
+Often, certain musical parts are repeated in a transposed form, where the melody is moved up or down in pitch by a constant interval. However, because of those transpositions, the relation between sections is not reflected in the SSM. We can make the SSM reflect them even in the presence of key transpositions by calculating the $i$-\textbf{transposed self-similarity matrix} $\rho^i(\textbf{S})$ defined by
+
+%formulaca
+\[\rho^i(\textbf{S})(n,m):=s(\rho^{i}(x_{n}), x_{m})\]
+
+where \rho  is the cyclic shift operator we defined for the chroma features. Obviously, $\rho^{12}(\textbf{S})=\textbf{S}$. Intuitively, $\rho^i(\textbf{S})$ describes the similarity between the original music  and the music transposed by $i$ semitones upwards.
+
+Taking a cell-wise maximum over the twelve different cyclic shifts, we obtain a \textbf{transposition-invariant self-similarity matrix}  defined by $\textbf{S}^{TI}$ defined by
+\[\textbf{S}^{TI}(n,m):=\max_{i\in[0:11]}\rho^i(\textbf{S})(n,m)\]
+We store the maximizing shift indices in an additional $N$-square matrix $\textbf{I}$, the \textbf{transposition index matrix:}
+\[\textbf{I}(n,m):=\argmax_{i\in[0:11]}\rho^i(\textbf{S})(n,m)\]
+
+%-----------------------
+ \begin{figure}[h]
+ \begin{center}
+ 	\includegraphics[width=\linewidth]%5cm
+ 		{images/transpositionMatrix.png}
+ 	\caption{Variants of SSMs for the song “In the year 2525” by Zager and Evans. (a) Original
+SSM using chroma features.(b) Path-enhanced SSM. (c) 1-transposed SSM.(d) 2-transposed SSM.(e) Transposition-invariant SSM.(f) Transposition index matrix.}
+ \end{center}
+ \label{figure:transpInxexMatrix}
+ \end{figure}
+%-----------------------
+
+The transposition index matrix values are usually coded with colours, as shown in Figure ~\ref{figure:transpInxexMatrix}.
+
+The value $i=0$ for a cell $(n, m)$ indicates that the chroma vector $x_{m}$ is closer to $x_{n}$ than any shifted version of $x_{n}$. Note, however, that this does not necessarily mean that $x_{m}$ is close to $x_{n}$ in absolute terms. At all positions where the conventional self-similarity matrix reveals paths of low cost, $i$ will take the value $i=0$. The value $i=1$ for a cell $(n, m)$ indicates that $x_{n}$  becomes most similar to $x_{m}$ when shifted one semitone upwards, and so on for other values of $i$. 
+
+Introducing transposition invariance may increase the noise, and therefore, the transposition-invariant matrix should be computed on the basis of smoothed matrices. 
+
+
 \subsubsection{Thresholding}
 \label{subsubsection:ssmEnhancementThresholding}
+
+In many music analysis applications, self-similarity matrices are further processed by suppressing values that fall below a given threshold. On the one hand, this leads to reduction of unwanted noise, leaving only significant structures. On the other hand, weaker but still relevant information may be lost. The thresholding strategy has to be carefully chosen. 
+
+The simplest strategy is to apply \textbf{global thresholding}, where all values below a given threshold parameter $\tau>0$ are set to zero:
+
+\[\textbf{S}_{\tau}(n,m):= 
+ \begin{cases} 
+      \textbf{S}(n,m) & if  \textbf{S}_{\tau}(n,m)\geq\tau \\
+      0 & otherwise 
+   \end{cases}
+\]  
+
+Also, we may also apply \textbf{binarization} by setting all values above the threshold to one and all others to zero. Instead of binarization, one may perform a \textbf{scaling} where the range $[\tau, \nu]$ is linearly scaled to $[0, 1]$.  Sometimes it may be beneficial to introduce an additional \textbf{penalty} parameter $\delta\leq0$, setting all original values below the threshold to the value $\delta$.
+
+%-----------------------
+ \begin{figure}[h]
+ \begin{center}
+ 	\includegraphics[width=\linewidth]%5cm
+ 		{images/ssmThreshold.png}
+ 	\caption{(a) SSM from Figure ~\ref{fig:ssmPathSmoothing}. (b) SSM after thresholding and binarization $(\tau=0.75)$. (c) SSM after thresholding and scaling $(\rho=0.2)$. (d) SSM after thresholding and scaling $(\rho=0.05)$.
+}
+ \end{center}
+ \label{figure:ssmThreshold}
+ \end{figure}
+%-----------------------
+
+
+The threshold $\tau$  can also be chosen in a \textbf{relative} way by keeping \rho·100\% of the cells with the highest values, where  $\rho\in[0,1]$ is the relative threshold parameter.  Thresholding can also be performed using a \textbf{local} strategy in a column- and row-wise fashion. To this end, for each cell $(n, m)$, the value $\textbf{S}(n, m)$ is kept if it is among the \rho·100\% of the largest cells in row $n$ and at the same time among the \rho·100\% of the largest cells in column $m$, all other values being set to zero. The suitability of a thresholding setting depends on the application. Often, suitable thresholds are learned and optimized using supervised learning procedures.
+
+%-----------------------
+ \begin{figure}[h]
+ \begin{center}
+ 	\includegraphics[width=\linewidth]%5cm
+ 		{images/ssmProcessed.png}
+ 	\caption{(a) Original SSM using chroma features. (b) SSM after diagonal smoothing. (c) SSM after tempo-invariant and forward–backward smoothing. (d) Transposition-invariant SSM.
+(e) Transposition index matrix. (f) SSM after thresholding with penalty and scaling $(\rho=0.2, \delta=−2)$.}
+ \end{center}
+ \label{figure:ssmProcessed}
+ \end{figure}
+%-----------------------
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Repetition based Segmentation and Audio Thumbnailing}
 \label{section:repetition}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%-----------------------
+\begin{figure}[h]
+  \includegraphics[width=\linewidth]{images/pathFamilies.png}
+  \label{fig:pathFamilies}
+	\begin{center}
+		\caption{SSM with various paths over the segment $\alpha=[50:100]$. The induced segments are indicated on the vertical axis. (a) SSM. (b) Paths forming a path family. (c) Paths not forming a path family (induced segments overlap). (d) Paths forming an optimal path family.}
+	\end{center}
+\end{figure}
+%-----------------------
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Novelty based Segmentation}
