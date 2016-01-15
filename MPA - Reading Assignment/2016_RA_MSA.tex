@@ -377,6 +377,74 @@ Given a music recording, the objective of \textbf{audio thumbnailing} is to auto
 \label{section:novelty}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+The objective of novelty-based structure analysis is to locate points where musical changes occur, thus marking the transition between two subsequent structural parts. There are various approaches for doing so, two of them will be covered. 
+
+\subsection{Novelty function and Checkerboard  Kernel}
+\label{subsection:noveltyKernel}
+
+In music is quite common to find a homogeneous segment followed by another homogeneous segment in contrast with the previous one (a section played by strings and one played by brass for example). In that case, SSMs reveal block-like structures. The goal of novelty detection is to identify the boundary between those sections. This is achieved analysing the \textbf{novelty function}, obtained  by correlating a checkerboard-like kernel along the main diagonal of the SSM. The peaks in this function indicate where changes happen in the audio signal. For example, using MFCCs, these peaks are good indicators for changes in timbre or instrumentation.
+
+Let's consider an audio with two homogeneous but contrasting sections. The SSM will have dark blocks on the main diagonal  corresponding to high similarity of the sequences with themselves. In contrast, light regions outside these blocks express that there is a low cross-similarity between the sections. Thus, to find the boundary between the two sections one needs to identify the crux of the ckeckerboard.
+
+To do so we can correlate the SSM with a kernel that looks like a checkerboard. The simplest one is the 
+
+%%
+%% 2x2 K kernel
+%%
+
+This kernel can be expressed as the difference between two kernels, as shown in the formula. The first kernel measures self-similarity, and its value is high when the two regions are homogeneous. The second kernel measures cross-similarity, and its value is high when the two regions are similar to each other. The difference of those two values estimates the \textbf{novelty}, which is high when two regions are self-similar but different from each other. 
+
+%-----------------------
+ \begin{figure}[h]
+ \begin{center}
+ 	\includegraphics[width=\linewidth]%5cm
+ 		{images/checkerboardKernel.png}
+ 	\caption{Checkerboard kernel functions of size $M=21 (L=10)$. (a,b) Box-like checkerboard kernel and 3D plot. (c,d) Gaussian checkerboard kernel and 3D plot.}
+ \end{center}
+ \label{figure:checkerboardKernel.png}
+ \end{figure}
+%-----------------------
+
+
+Normally the kernels used are larger, as we are interested in changes on a larger time scale. To obtain those kernels, we define a size of the kernel $M$ given by $M=2L+1$. The box-kernel of size $M$ is an $M\times M$ square matrix whose indexes go from $[-L,L]$, and defined by $\textbf{K}=sgn(k)·sgn(l)$ where $k,l\in[-L,L]$ and "sgn" is the sign function (being -1 for negative numbers, 0 for zero and 1 for positive numbers). For example, for $L=2$ one obtains the following kernel:
+
+%%
+%%  bigger kernel palette
+%%
+
+This box-kernel can also be smoothed by point wise multiplying it with a Gaussian function defined by  $\phi(s,t):=exp(-\epsilon^2(s^2+t^2))$ thus obtaining
+
+\[\textbf{K}_{Gauss}(k,l)=\phi(k,l)·\textbf{K}_{Box}(k,l)\]
+
+The normalization of the kernel is also very important, specially when combining and fusing information obtained from kernels of different size, and can be performed as follows
+
+\[\textbf{K}_{Norm}(k,l)=\frac{\textbf{K}_{Gauss}(k,l)}{\sum_{kxl\in[-L:L]}|\textbf{K}_{Gauss}(k,l)|}\]
+
+
+To detect the corner points we slide the kernel $\textbf{K}$ along the main diagonal of the SSM and sum up the element-wise product, getting a $\Delta_{Kernel}(n)$ \textbf{novelty function}:
+
+\[\Delta_{Kernel}(n):=\sum_{kxl\in[-L:L]}\textbf{K}(k,l)\textbf{S}(n+k, n+l)\]
+
+When the kernel is positioned in a uniform region, the positive and negative values sum up to zero and $\Delta_{Kernel}(n)$ becomes small. When the kernel is at the crux, the values sum up to a large value $\Delta_{Kernel}(n)$. 
+
+%-----------------------
+ \begin{figure}[h]
+ \begin{center}
+ 	\includegraphics[width=\linewidth]%5cm
+ 		{images/kernelSizes.png}
+ 	\caption{(a) SSM using tempo-based features. (b–d) Novelty functions derived from (a) using a kernel of small/medium/large size. (e) SSM from Figure 4.7b using chroma-based features. (f–h) Novelty functions derived from (e) using a kernel of small/medium/large size.}
+ \end{center}
+ \label{figure:kernelSizes.png}
+ \end{figure}
+%-----------------------
+
+
+The size of the kernel has a significant impact on the novelty function. Smaller kernels are used for detecting novelty on a short time scale, whereas large kernels are suited for detecting boundaries in a coarse level. A small kernel can lead to a noisy novelty function with many peaks, particularly when SSM contains path structures. Using a larger kernel results in a smoother novelty function. A similar effect is achieved by smoothing the SSM, because that often leads to an enhancement of the blocks. 
+
+Peak selection strategy is also a delicate step that influences on the final result. Adaptive thresholding techniques may be applied to the novelty function so that a peak is only selected when its value exceeds the local average. We can also impose a minimal distance between subsequent peaks to reduce wrong boundary detections.
+
+\subsection{Structure Features}
+\label{subsection:structureFeatures}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Feedback}
