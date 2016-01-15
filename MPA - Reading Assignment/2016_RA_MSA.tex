@@ -2,7 +2,8 @@
 % !TeX program = lualatex
 
 \documentclass[a4paper, 9pt, twocolumn]{extarticle}
-\usepackage[dvips]{graphicx}		
+\usepackage{polyglossia}
+\usepackage{graphicx}		
 \usepackage{tabularx}
 \usepackage{multirow}	
 \usepackage{url}
@@ -11,9 +12,11 @@
 \usepackage{parskip}
 \usepackage{amsmath}
 
+\usepackage[hidelinks, unicode, english]{hyperref}
+
 % \usepackage[]{auto-pst-pdf}
 % \usepackage{pstricks}
- \usepackage{pst-plot}
+%\usepackage{pst-plot}
 % \usepackage{pst-node}
 % \usepackage{multido}
 % \usepackage{url}
@@ -63,7 +66,7 @@ Arnulf Becker\\
 \small
 Friedrich-Alexander Universit\"at Erlangen-N\"urnberg
 \protect\\{} % 
-\url{arnulf.becker@FAU.de}
+\url{arnulf.becker@fau.de}
 \end{minipage}%
 \begin{minipage}[t]{.45\textwidth}
 \center
@@ -79,41 +82,6 @@ Friedrich-Alexander Universit\"at Erlangen-N\"urnberg
 \maketitle
 \thispagestyle{empty}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Default Introduction [will be removed]}
-\label{section:defaultIntroduction}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-This is a \LaTeX-template for the summary of the reading assignment summary. Note that the summary
-itself should not exceed one page. Furthermore, please provide your feedback concerning the 
-book chapter and the lecture on additional pages.
-The style of this template may not be changed.
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Main Section[will be removed]}
-\label{section:main}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-The summary should consist of one to three main sections.
-Please restrict yourself to describing only the the most
-important points covered in the chapter. These sections
-should contain the motivation of the problem as well as
-the most important technical details. Use an easy to read
-language with short, clear sentences. 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Here you find some additional LaTex code fragments for including figures and
-% references which you may find helpful.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Example for a citation: \cite{Mueller07_InformationRetrieval_SPRINGER}.
-
-Example for figure: Figure~\ref{figure:example}.
-
-
-\newpage
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{General Principles} 
@@ -183,19 +151,18 @@ In this case, the SSM has a diagonal with large values, because $s(x_{n},x_{n})=
 
 (examples of sssm interpretations) page 183 of the book
 
-To formalize paths and block structures, some other basics have to be defined first. Figure~\ref{fig:ssmPathBlock} shows a graphical description of them. A segment is a set $\alpha=[s:t]$ of features specified by the index $s$ of the starting feature and the index $t$ of its last feature. We will use $|\alpha|:=t-s+1$ to denote the length of $\alpha$. A \textbf{path} over $\alpha$ of length $L$ is a sequence $P=((n_{1},m_{1}), (n_{2},m_{2}), ..., (n_{L},m_{L})$ of cells $(n_{l}, m_{l})$ that satisfy the boundary condition $m_{1}=s$ and $m_{L}=t$ and the step size condition $(n_{L+1},m_{L+1})-(n_{L},m_{L})\in \Sigma$, where $\Sigma$ denotes the admissible set size. As in the warping path case, we normally use $\Sigma=\{(2,1), (1,2), (1,1)\}$.
+To formalize paths and block structures, some other basics have to be defined first. \autoref{fig:ssmPathBlock} shows a graphical description of them. A segment is a set $\alpha=[s:t]$ of features specified by the index $s$ of the starting feature and the index $t$ of its last feature. We will use $|\alpha|:=t-s+1$ to denote the length of $\alpha$. A \textbf{path} over $\alpha$ of length $L$ is a sequence $P=((n_{1},m_{1}), (n_{2},m_{2}), ..., (n_{L},m_{L})$ of cells $(n_{l}, m_{l})$ that satisfy the boundary condition $m_{1}=s$ and $m_{L}=t$ and the step size condition $(n_{L+1},m_{L+1})-(n_{L},m_{L})\in \Sigma$, where $\Sigma$ denotes the admissible set size. As in the warping path case, we normally use $\Sigma=\{(2,1), (1,2), (1,1)\}$.
 
 Every path $P$ has two two segments $\pi_{1}:=[n_{l}:n_{L}$ and $\pi_{1}:=[m_{l}:m_{L}]$ associated, defined by its projections. Logically, $\pi_{2}(P)= \alpha$. The other segment $\pi _{1} (P)= \alpha$ is called the \textbf{induced segment}. The \textbf{score} $\sigma (P)$ of $P$ is defined as\[\sigma(P):= 	\sum_{l=1}^{L}\textbf{S}(n_{l}, m_{l})\]
 
-Note that each path over the segment \alpha  encodes a relation between \alpha and an induced segment, where the score $\sigma(P)$ yields a quality measure for this relation.
+Note that each path over the segment \alpha encodes a relation between \alpha and an induced segment, where the score $\sigma(P)$ yields a quality measure for this relation.
 
 %-----------------------
 \begin{figure}[h]
-  \includegraphics[width=\linewidth]{images/SSMpathBlocks.png}
-  \label{fig:ssmPathBlock}
-	\begin{center}
-		\caption{SSM with path and block structures.}
-	\end{center}
+\centering
+\includegraphics[width=\linewidth]{images/SSMpathBlocks.png}
+\caption{SSM with path and block structures.}
+\label{fig:ssmPathBlock}
 \end{figure}
 %-----------------------
 
@@ -217,16 +184,15 @@ Computerized music structure analysis is an error-prone and fragile task, as bot
 \subsubsection{Feature Preprocessing}
 \label{subsubsection:ssmEnhancementFeaturePreprocessing}
 
-Considering a modified chroma representation may result in a SSM with more recognizable patterns. This task is better explained in another chapter, but in broad terms it is based on two parameters: The length parameter $l$, to average the feature values over $l$ consecutive frames, and the downsampling parameter $d$ which reduces the feature rate. The effects can be seen in the Figure~\ref{fig:ssmDownsampling}:
+Considering a modified chroma representation may result in a SSM with more recognizable patterns. This task is better explained in another chapter, but in broad terms it is based on two parameters: The length parameter $l$, to average the feature values over $l$ consecutive frames, and the downsampling parameter $d$ which reduces the feature rate. The effects can be seen in the \autoref{fig:ssmDownsampling}:
 
 
 %-----------------------
 \begin{figure}[h!]
-  \includegraphics[width=\linewidth]{images/ssmDownsampling.png}
-  \label{fig:ssmDownsampling}
-	\begin{center}
-		\caption{(a) Usage of original normalized chroma features (10 Hz). (b) Applying $l$=40 and $d$=10 (1 Hz). (c) Applying $l$= 160 and $d$=20 (0.5 Hz). (d) Applying $l$=480 and $d$=50 (0.2 Hz).}
-	\end{center}
+	\centering
+	\includegraphics[width=\linewidth]{images/ssmDownsampling.png}
+	\caption{(a) Usage of original normalized chroma features (10 Hz). (b) Applying $l$=40 and $d$=10 (1 Hz). (c) Applying $l$= 160 and $d$=20 (0.5 Hz). (d) Applying $l$=480 and $d$=50 (0.2 Hz).}
+	 \label{fig:ssmDownsampling}
 \end{figure}
 %-----------------------
 
@@ -252,11 +218,10 @@ A simple filtering along the main diagonal only works well if there are no relat
 
 %-----------------------
 \begin{figure}[h]
+\centering
   \includegraphics[width=\linewidth]{images/ssmPathSmoothing.png}
-  \label{fig:ssmPathSmoothing}
-	\begin{center}
-		\caption{(a) Original SSM using chroma features (resolution of 2 Hz). (b) SSM after applying diagonal smoothing. (c) SSM after applying tempo-invariant smoothing. (d) SSM after applying forward–backward smoothing.}
-	\end{center}
+\caption{(a) Original SSM using chroma features (resolution of 2 Hz). (b) SSM after applying diagonal smoothing. (c) SSM after applying tempo-invariant smoothing. (d) SSM after applying forward–backward smoothing.}
+\label{fig:ssmPathSmoothing}
 \end{figure}
 %-----------------------
 
@@ -289,17 +254,16 @@ We store the maximizing shift indices in an additional $N$-square matrix $\textb
 
 %-----------------------
  \begin{figure}[h]
- \begin{center}
+ \centering
  	\includegraphics[width=\linewidth]%5cm
  		{images/transpositionMatrix.png}
  	\caption{Variants of SSMs for the song “In the year 2525” by Zager and Evans. (a) Original
 SSM using chroma features.(b) Path-enhanced SSM. (c) 1-transposed SSM.(d) 2-transposed SSM.(e) Transposition-invariant SSM.(f) Transposition index matrix.}
- \end{center}
  \label{figure:transpInxexMatrix}
  \end{figure}
 %-----------------------
 
-The transposition index matrix values are usually coded with colours, as shown in Figure ~\ref{figure:transpInxexMatrix}.
+The transposition index matrix values are usually coded with colours, as shown in \autoref{figure:transpInxexMatrix}.
 
 The value $i=0$ for a cell $(n, m)$ indicates that the chroma vector $x_{m}$ is closer to $x_{n}$ than any shifted version of $x_{n}$. Note, however, that this does not necessarily mean that $x_{m}$ is close to $x_{n}$ in absolute terms. At all positions where the conventional self-similarity matrix reveals paths of low cost, $i$ will take the value $i=0$. The value $i=1$ for a cell $(n, m)$ indicates that $x_{n}$  becomes most similar to $x_{m}$ when shifted one semitone upwards, and so on for other values of $i$. 
 
@@ -324,12 +288,12 @@ Also, we may also apply \textbf{binarization} by setting all values above the th
 
 %-----------------------
  \begin{figure}[h]
- \begin{center}
+ \centering
  	\includegraphics[width=\linewidth]%5cm
  		{images/ssmThreshold.png}
- 	\caption{(a) SSM from Figure ~\ref{fig:ssmPathSmoothing}. (b) SSM after thresholding and binarization $(\tau=0.75)$. (c) SSM after thresholding and scaling $(\rho=0.2)$. (d) SSM after thresholding and scaling $(\rho=0.05)$.
+ 	\caption{(a) SSM from \autoref{fig:ssmPathSmoothing}. (b) SSM after thresholding and
+ 	binarization $(\tau=0.75)$. (c) SSM after thresholding and scaling $(\rho=0.2)$. (d) SSM after thresholding and scaling $(\rho=0.05)$.
 }
- \end{center}
  \label{figure:ssmThreshold}
  \end{figure}
 %-----------------------
@@ -339,12 +303,11 @@ The threshold $\tau$  can also be chosen in a \textbf{relative} way by keeping \
 
 %-----------------------
  \begin{figure}[h]
- \begin{center}
+ \centering
  	\includegraphics[width=\linewidth]%5cm
  		{images/ssmProcessed.png}
  	\caption{(a) Original SSM using chroma features. (b) SSM after diagonal smoothing. (c) SSM after tempo-invariant and forward–backward smoothing. (d) Transposition-invariant SSM.
 (e) Transposition index matrix. (f) SSM after thresholding with penalty and scaling $(\rho=0.2, \delta=−2)$.}
- \end{center}
  \label{figure:ssmProcessed}
  \end{figure}
 %-----------------------
@@ -355,22 +318,41 @@ The threshold $\tau$  can also be chosen in a \textbf{relative} way by keeping \
 \label{section:repetition}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Given a music recording, the objective of \textbf{audio thumbnailing} is to automatically determine the most representative section, which may serve as a kind of “preview". Often chorus or the main theme are good candidates. These parts are typically repeated several times, and so most procedures try to identify a section that has a certain minimal duration and many repetitions. The challenge is that sections may show significant musical differences.
+The main goal of \textbf{audio thumbnailing} is to automatically determine the most representative
+section of a audio recording. In many cases the chorus or the main theme are good candidates for
+this. 
+In order to find this section a \textbf{fitness measure} is used to rate every part. It describes
+both how well it is suited to explain other elements and how much of the whole music recording these
+related segments cover. The audio thumbnail is then the segment of maximum fitness.
 
 
 %-----------------------
 \begin{figure}[h]
+\centering
   \includegraphics[width=\linewidth]{images/pathFamilies.png}
-  \label{fig:pathFamilies}
-	\begin{center}
-		\caption{SSM with various paths over the segment $\alpha=[50:100]$. The induced segments are indicated on the vertical axis. (a) SSM. (b) Paths forming a path family. (c) Paths not forming a path family (induced segments overlap). (d) Paths forming an optimal path family.}
-	\end{center}
+	\caption{SSM with various paths over the segment $\alpha=[50:100]$. The induced segments are indicated on the vertical axis. (a) SSM. (b) Paths forming a path family. (c) Paths not forming a path family (induced segments overlap). (d) Paths forming an optimal path family.}
+	\label{fig:pathFamilies}
 \end{figure}
 %-----------------------
 
 \subsection{Scape Plot Representation}
 \label{subsection:scapePlot}
 
+A scape plot is a method to visualize the fitness value of each possible segment. As can be seen in 
+\autoref{fig:scapePlot} on the y-axis there is segment length and on the x-axis the center of the
+respective segment. It has a triangle shape because a segment covering the whole music recording only has one center point, whereas a segement with length one can have its center on all positions.
+The third axis, which represents the fitness value, is visualized by a color gradient within the
+triangle.
+
+%-----------------------
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\linewidth]{images/scapePlot.png}
+	\caption{Definition of scape plot representation. (a) Schematic SSM with segment. (b) Schematic
+scape plot with segment.}
+	\label{fig:scapePlot}
+\end{figure}
+%-----------------------
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Novelty based Segmentation}
@@ -382,7 +364,8 @@ The objective of novelty-based structure analysis is to locate points where musi
 \subsection{Novelty function and Checkerboard  Kernel}
 \label{subsection:noveltyKernel}
 
-In music is quite common to find a homogeneous segment followed by another homogeneous segment in contrast with the previous one (a section played by strings and one played by brass for example). In that case, SSMs reveal block-like structures. The goal of novelty detection is to identify the boundary between those sections. This is achieved analysing the \textbf{novelty function}, obtained  by correlating a checkerboard-like kernel along the main diagonal of the SSM. The peaks in this function indicate where changes happen in the audio signal. For example, using MFCCs, these peaks are good indicators for changes in timbre or instrumentation.
+In music it is quite common to find a homogeneous segment followed by another homogeneous segment in
+contrast with the previous one (a section played by strings and one played by brass for example). In that case, SSMs reveal block-like structures. The goal of novelty detection is to identify the boundary between those sections. This is achieved analysing the \textbf{novelty function}, obtained  by correlating a checkerboard-like kernel along the main diagonal of the SSM. The peaks in this function indicate where changes happen in the audio signal. For example, using MFCCs, these peaks are good indicators for changes in timbre or instrumentation.
 
 Let's consider an audio with two homogeneous but contrasting sections. The SSM will have dark blocks on the main diagonal  corresponding to high similarity of the sequences with themselves. In contrast, light regions outside these blocks express that there is a low cross-similarity between the sections. Thus, to find the boundary between the two sections one needs to identify the crux of the ckeckerboard.
 
@@ -396,11 +379,10 @@ This kernel can be expressed as the difference between two kernels, as shown in 
 
 %-----------------------
  \begin{figure}[h]
- \begin{center}
+ \centering
  	\includegraphics[width=\linewidth]%5cm
  		{images/checkerboardKernel.png}
  	\caption{Checkerboard kernel functions of size $M=21 (L=10)$. (a,b) Box-like checkerboard kernel and 3D plot. (c,d) Gaussian checkerboard kernel and 3D plot.}
- \end{center}
  \label{figure:checkerboardKernel.png}
  \end{figure}
 %-----------------------
@@ -443,40 +425,15 @@ The size of the kernel has a significant impact on the novelty function. Smaller
 
 Peak selection strategy is also a delicate step that influences on the final result. Adaptive thresholding techniques may be applied to the novelty function so that a peak is only selected when its value exceeds the local average. We can also impose a minimal distance between subsequent peaks to reduce wrong boundary detections.
 
-\subsection{Structure Features}
-\label{subsection:structureFeatures}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Feedback}
-\label{section:feedback}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-%-----------------------
- \begin{figure}[h]
- \begin{center}
- \includegraphics[width=5cm]{images/figure_example.png}
- \end{center}
- \caption{
- Example for a figure.
- }
- \label{figure:example}
- \end{figure}
-%-----------------------
-
-
-Feedback may also be given in form of bullet points
-\begin{itemize}
-\item This was good....
-\item I did not like...
-\end{itemize}
+% \subsection{Structure Features}
+% \label{subsection:structureFeatures}
 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\bibliographystyle{abbrv}
-\small
-\bibliography{references}
+% \bibliographystyle{abbrv}
+% \small
+% \bibliography{references}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
